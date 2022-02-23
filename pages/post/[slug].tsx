@@ -4,6 +4,7 @@ import { sanityClient, urlFor } from "../../sanity"
 import { Post } from "../../typings"
 import PortableText from "react-portable-text"
 import {useForm, SubmitHandler} from "react-hook-form"
+import { useState } from "react"
 
 interface Props {
     post: Post;
@@ -20,6 +21,8 @@ interface IFormInput {
 
 function Post({ post }: Props) {
 
+    const [submitted, setSubmitted] = useState(false);
+
     const {register, handleSubmit, formState: {errors},} = useForm<IFormInput>();
 
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -28,10 +31,10 @@ function Post({ post }: Props) {
             body: JSON.stringify(data),
         }).then(() => {
             console.log(data);
-            
+            setSubmitted(true);
         }).catch((err) => {
             console.log(err);
-            
+            setSubmitted(false);
         })
         
     }
@@ -75,7 +78,13 @@ function Post({ post }: Props) {
 
         <hr className="max-w-lg my-5 mx-auto border border-yellow-500" />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-5 max-w-2xl mx-auto mb-10">
+        {submitted ? (
+            <div className="flex flex-col p-10 my-10 bg-yellow-500 text-white max-w-2xl mx-auto text-center">
+                <h3 className="text-3xl font-bold">Thank you for submitting!</h3>
+                <p>Once approved, comment will appear below!</p>
+            </div>
+        ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-5 max-w-2xl mx-auto mb-10">
             <h3 className="text-sm text-yellow-500">Enjoy this article?</h3>
             <h4 className="text-3xl font-bold">Leave a comment below!</h4>
             <hr className="py-3 mt-2"/>
@@ -125,6 +134,7 @@ function Post({ post }: Props) {
                 focus:outline-none text-white font-bold py-2 px-4 cursor-pointer rounded"/>
 
         </form>
+        )}
 
     </main>
   );
