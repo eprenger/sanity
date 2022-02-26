@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import Header from "../components/Header";
 
@@ -6,7 +6,7 @@ const fileTypes = ["JPG", "PNG", "GIF", "PDF", "TXT",];
 
 function fileupload() {
     const [file, setFile] = useState(null);
-    const handleChange = file => {
+    const handleChange = (file: SetStateAction<null>) => {
         setFile(file);
     };
     return (
